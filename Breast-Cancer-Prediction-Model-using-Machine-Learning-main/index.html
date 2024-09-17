@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction</title>
+</head>
+<body>
+    <h1>Breast Cancer Detection</h1>
+    <form id="predictForm">
+        <label for="features">Enter 30 features (comma-separated):</label><br>
+        <textarea id="features" rows="10" cols="50"></textarea><br>
+        <button type="submit">Predict</button>
+    </form>
+    <h2 id="result"></h2>
+
+    <script>
+        document.getElementById('predictForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const features = document.getElementById('features').value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ feature: features })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'An error occurred.';
+            });
+        });
+    </script>
+</body>
+</html>
